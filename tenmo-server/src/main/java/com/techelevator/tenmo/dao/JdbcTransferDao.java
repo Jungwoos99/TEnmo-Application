@@ -15,7 +15,7 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     public void sendTransfer(int accountFrom, int accountTo, BigDecimal amount, int transferStatus) {
-        if(checkBalance(accountFrom, amount) == 200) {
+        if(checkBalance(accountFrom, amount) == 200 && accountTo != accountFrom) {
             String fromSql = "UPDATE account SET balance = balance - ?" +
                     " WHERE account_id = ?;";
             jdbcTemplate.update(fromSql, amount, accountFrom);
@@ -24,7 +24,6 @@ public class JdbcTransferDao implements TransferDao{
             jdbcTemplate.update(toSql, amount, accountTo);
         }
     }
-
 
     public int checkBalance(int accountId, BigDecimal amount) {
         String sql = "SELECT balance FROM account WHERE account_id = ?;";
