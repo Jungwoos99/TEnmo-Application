@@ -16,6 +16,8 @@ import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.security.jwt.TokenProvider;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 /**
  * Controller to authenticate users.
  */
@@ -55,6 +57,11 @@ public class AuthenticationController {
         }
     }
 
+    @GetMapping(path = "/users")
+    public List<User> allUsers() {
+        return userDao.findAll();
+    }
+
     /**
      * Object to return as body in JWT Authentication.
      */
@@ -84,5 +91,11 @@ public class AuthenticationController {
 			this.user = user;
 		}
     }
+
+    @GetMapping(path = "")
+    public String sayHello(){
+        return "Hello This is capstone 2";
+    }
+
 }
 
