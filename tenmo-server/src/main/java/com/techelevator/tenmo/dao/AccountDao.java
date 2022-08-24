@@ -1,25 +1,18 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.model.Account;
-
 import java.math.BigDecimal;
-import java.util.List;
+
+import com.techelevator.tenmo.model.Account;
 
 public interface AccountDao {
 
-    //Check balance
 
-    //Update Account
+    BigDecimal getAccountBalance(int id);
 
-    //
+    double getAccountBalanceCheck(int id);
 
-    BigDecimal getBalance(int id);
+    Account getAccountById(int user_id);
 
-    Account getAccountByUserId(int id);
-
-    int getAccountId(int id);
-
-    List<Account> getAllAccounts();
-
-
+    void updateAccountBalance(int user_id, double balance);
 }
+

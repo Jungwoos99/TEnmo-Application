@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class JdbcTransferDao implements TransferDao{
 
@@ -34,5 +36,25 @@ public class JdbcTransferDao implements TransferDao{
             status = 0;
         }
         return status;
+    }
+
+    @Override
+    public void sendBucks(int userId, int toUserId, double amount) {
+
+    }
+
+    @Override
+    public List<Transfer> viewTransfers(int userId) {
+        return null;
+    }
+
+    @Override
+    public Transfer viewTransferDetails(int transferId) {
+        return null;
+    }
+
+    @Override
+    public List<Transfer> findAll() {
+        return null;
     }
 }
