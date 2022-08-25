@@ -1,18 +1,12 @@
 package com.techelevator.tenmo.dao;
 
-
-
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.User;
 
 @Component
 public class JdbcAccountDAO implements AccountDao {
@@ -26,19 +20,16 @@ public class JdbcAccountDAO implements AccountDao {
 
     @Override
     public BigDecimal getAccountBalance (int id) {
-
         String sql = "SELECT balance FROM account WHERE user_id = ?";
         BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, id);
-
         return balance;
     }
 
     @Override
-    public void updateAccountBalance(int user_id, double balance) {
-        String sql = "UPDATE account SET balance = ? WHERE user_id = ?"; // this may not work lol
-        jdbcTemplate.update(sql, balance, user_id);
+    public int getAccountIdWithUserId(int userId) {
+        String sql = "SELECT account_id FROM account WHERE user_id = ?;";
+        return jdbcTemplate.queryForObject(sql, Integer.class, userId);
     }
-
 
     private Account mapRowToAccount(SqlRowSet result) {
         Account account = new Account();
@@ -46,6 +37,5 @@ public class JdbcAccountDAO implements AccountDao {
         account.setAccountId(result.getInt("account_id"));
         account.setUserId(result.getInt("user_id"));
         return account;
-
     }
 }

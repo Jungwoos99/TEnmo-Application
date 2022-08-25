@@ -34,28 +34,14 @@ public class AccountController {
         return accountDAO.getAccountBalance(userId);
     }
 
-    @RequestMapping (path = "/{id}/update", method = RequestMethod.PUT)
-    public void updateAccountBalance(@PathVariable int id, @RequestBody AccountDTO balance) {
-        accountDAO.updateAccountBalance(id, balance.getNumber());
-    }
-
-    @RequestMapping(path = "/{id}/transfer", method = RequestMethod.GET)
-    public Transfer transferDetails(@PathVariable int id) {
-        //System.out.println("in transfer details");
-        return transferDAO.viewTransferDetails(id);
-    }
-    @RequestMapping(path = "{id}/allTransfers", method = RequestMethod.GET)
-    public Transfer[] getTransferList (@PathVariable int id) {
-        //System.out.println("in all transfers");
-        return transferDAO.viewTransfers(id).toArray(new Transfer[0]);
-    }
-    @RequestMapping(path = "/transferwith", method = RequestMethod.POST)
-    public void updateBalances(@RequestParam int fromUserId,
-                               @RequestParam int toUserId, @RequestParam double amount) {
-        transferDAO.sendBucks(fromUserId,toUserId,amount);
+    /***Test method to return account id using user id***/
+    @GetMapping(path = "/{id}")
+    public int getAccountId(@PathVariable int id) {
+        return accountDAO.getAccountIdWithUserId(id);
     }
 
     //Helper Method - non request mapping method
+
     public Integer userIdHelperMethod(Principal principal) {
         return userDAO.findIdByUsername(principal.getName());
     }
