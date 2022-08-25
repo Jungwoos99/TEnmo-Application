@@ -53,8 +53,4 @@ public class AuthenticationService {
         return new HttpEntity<>(credentials, headers);
     }
 
-
-    private String sayHello() {
-        return "Hello";
-    }
 }

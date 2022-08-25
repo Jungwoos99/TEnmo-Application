@@ -2,10 +2,15 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Component
 public class JdbcTransferDao implements TransferDao{
 
     private JdbcTemplate jdbcTemplate;
@@ -14,15 +19,16 @@ public class JdbcTransferDao implements TransferDao{
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void sendTransfer(int accountFrom, int accountTo, BigDecimal amount, int transferStatus) {
-        if(checkSufficientFunds(accountFrom, amount) == 200 && accountTo != accountFrom) {
-            String fromSql = "UPDATE account SET balance = balance - ?" +
-                    " WHERE account_id = ?;";
-            jdbcTemplate.update(fromSql, amount, accountFrom);
-            String toSql = "UPDATE account SET balance = balance + ?" +
-                    " WHERE account_id = ?";
-            jdbcTemplate.update(toSql, amount, accountTo);
+    public Map<Integer, String> getUsersAndAccountId() {
+        Map<Integer, String> users = new HashMap<>();
+        String sql = "SELECT tu.username, a.account_id FROM tenmo_user tu JOIN account a USING (user_id);";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
+        while(result.next()) {
+            String username = result.getString("username");
+            int accountId = result.getInt("account_id");
+            users.put(accountId, username);
         }
+        return users;
     }
 
     public int checkSufficientFunds(int accountId, BigDecimal amount) {

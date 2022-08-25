@@ -1,50 +1,39 @@
 package com.techelevator.tenmo.controller;
 
 import java.math.BigDecimal;
+import java.security.Principal;
+import java.util.Map;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AccountDTO;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.User;
 
-//@PreAuthorize("isAuthenticated()")
 @RequestMapping("/account")
 @RestController
+@PreAuthorize("hasRole('ROLE_USER')")
 public class AccountController {
 
     private AccountDao accountDAO;
     private UserDao userDAO;
     private TransferDao transferDAO;
+
     public AccountController (AccountDao accountDAO, UserDao userDAO, TransferDao transferDAO) {
         this.accountDAO = accountDAO;
         this.userDAO = userDAO;
         this.transferDAO = transferDAO;
-
-    }
-    @RequestMapping (path = "/{id}/balance", method = RequestMethod.GET)
-    public BigDecimal getBalance (@PathVariable int id) {
-        return accountDAO.getAccountBalance(id);
     }
 
-    @RequestMapping (path = "/{id}/balanceCheck", method = RequestMethod.GET)
-    public double getBalanceCheck (@PathVariable int id) {
-        return accountDAO.getAccountBalanceCheck(id);
+    @RequestMapping (path = "/balance", method = RequestMethod.GET)
+    public BigDecimal getBalance (Principal principal) {
+        int userId = userIdHelperMethod(principal);
+        return accountDAO.getAccountBalance(userId);
     }
 
-    @RequestMapping (path = "/findUsers", method = RequestMethod.GET)
-    public User[] getUsers (){
-        return userDAO.findAll().toArray(new User[0]);
-    }
-    @RequestMapping (path = "/{id}", method = RequestMethod.GET)
-    public Account getAccount(@PathVariable int id) {
-        //System.out.println("in getAccount");
-        return accountDAO.getAccountById(id);
-    }
     @RequestMapping (path = "/{id}/update", method = RequestMethod.PUT)
     public void updateAccountBalance(@PathVariable int id, @RequestBody AccountDTO balance) {
         accountDAO.updateAccountBalance(id, balance.getNumber());
@@ -66,6 +55,9 @@ public class AccountController {
         transferDAO.sendBucks(fromUserId,toUserId,amount);
     }
 
-
+    //Helper Method - non request mapping method
+    public Integer userIdHelperMethod(Principal principal) {
+        return userDAO.findIdByUsername(principal.getName());
+    }
 
 }
