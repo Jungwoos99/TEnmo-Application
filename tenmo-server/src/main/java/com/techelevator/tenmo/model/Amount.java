@@ -1,12 +1,12 @@
 package com.techelevator.tenmo.model;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import org.springframework.format.annotation.NumberFormat;
+
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
 public class Amount {
-    
+
     private BigDecimal amount;
 
     public Amount(){}

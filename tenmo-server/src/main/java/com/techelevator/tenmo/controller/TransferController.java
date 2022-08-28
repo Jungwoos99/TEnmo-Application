@@ -51,7 +51,6 @@ public class TransferController {
 
     @GetMapping(path = "/send/{id}")
     public Transfer sendMoney(@PathVariable int id, @Valid @RequestBody Amount amount, Principal principal) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
-//        return transferDao.sendTypeTransfer(userDao.findIdByUsername(principal.getName()), id, amount);
         return transferDao.sendTypeTransfer(amount.getAmount(), userDao.findIdByUsername(principal.getName()), id);
     }
 

@@ -42,10 +42,11 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer sendTypeTransfer(BigDecimal amount, int fromUserId, int toUserId) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
         Transfer transfer = new Transfer();
+        boolean validFormat = getNumberOfDecimalPlaces(amount) <= 2;
         boolean sufficientFunds = checkForSufficientFunds(fromUserId, amount);
         boolean validTransaction = fromUserId != toUserId;
         boolean validAmount = amount.compareTo(new BigDecimal(0)) == 1;
-        if(sufficientFunds && validTransaction && validAmount) {
+        if(sufficientFunds && validTransaction && validAmount && validFormat) {
             String sendSql = "UPDATE account SET balance = balance - ? " +
                     "WHERE user_id = ?;";
             jdbcTemplate.update(sendSql, amount, fromUserId);
@@ -58,8 +59,10 @@ public class JdbcTransferDao implements TransferDao {
             throw new InsufficientFundsException("Insufficient Funds");
         } else if(!validTransaction){
             throw new InvalidTransferException("Transactions may only occur between different accounts.");
-        } else {
+        } else if(!validAmount){
             throw new InvalidTransactionAmountException("Transaction amounts must be greater than $0");
+        } else {
+            throw new InvalidTransactionAmountException("Transaction amount should follow standard USD format");
         }
     }
 
@@ -132,6 +135,10 @@ public class JdbcTransferDao implements TransferDao {
         String sql = "SELECT transfer_status_id FROM transfer_status " +
                 "WHERE transfer_status_desc = 'Approved';";
         return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    private int getNumberOfDecimalPlaces(BigDecimal amount) {
+        return Math.max(0, amount.stripTrailingZeros().scale());
     }
 
     //Helper method which compares the balance of an account to a desired withdrawal amount
