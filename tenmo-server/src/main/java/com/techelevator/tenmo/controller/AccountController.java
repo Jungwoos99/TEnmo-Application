@@ -28,7 +28,7 @@ public class AccountController {
         this.transferDAO = transferDAO;
     }
 
-    @RequestMapping (path = "/balance", method = RequestMethod.GET)
+    @GetMapping(path = "/balance")
     public BigDecimal getBalance (Principal principal) {
         int userId = userIdHelperMethod(principal);
         return accountDAO.getAccountBalance(userId);

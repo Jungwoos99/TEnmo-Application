@@ -57,13 +57,13 @@ public class ConsoleService {
         return scanner.nextLine();
     }
 
-    public int promptForInt(String prompt) {
+    public int promptForIdInt(String prompt) {
         System.out.print(prompt);
         while (true) {
             try {
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Please enter a number.");
+                System.out.println("Please enter an id number.");
             }
         }
     }
@@ -77,6 +77,10 @@ public class ConsoleService {
                 System.out.println("Please enter a decimal number.");
             }
         }
+    }
+
+    public void showBalance(String prompt, BigDecimal balance) {
+        System.out.println(prompt + balance);
     }
 
     public void pause() {

@@ -1,9 +1,15 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.TransferService;
+import io.cucumber.java.sl.In;
+
+import java.util.Map;
 
 public class App {
 
@@ -11,6 +17,8 @@ public class App {
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
+    private final TransferService transferService = new TransferService(API_BASE_URL);
+    private final AccountService accountService = new AccountService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
 
@@ -86,12 +94,16 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-		
+        consoleService.showBalance("Your current balance is: $",
+                accountService.getAccountBalance(currentUser));
 	}
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
-		
+        Transfer[] transfers = transferService.getTransfers(currentUser);
+        for(Transfer transfer : transfers) {
+            System.out.println(transfer.toString());
+        }
 	}
 
 	private void viewPendingRequests() {
@@ -101,7 +113,10 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-		
+//        Map<Integer, String> users = transferService.getListOfUsers(currentUser);
+//        for(Map.Entry<Integer, String> user : users.entrySet()) {
+//            System.out.println(user.toString());
+//        }
 	}
 
 	private void requestBucks() {

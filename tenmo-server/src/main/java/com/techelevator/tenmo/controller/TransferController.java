@@ -3,14 +3,16 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
+import com.techelevator.tenmo.model.Amount;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.security.InsufficientFundsException;
-import com.techelevator.tenmo.security.InvalidTransactionAmount;
-import com.techelevator.tenmo.security.InvalidTransferException;
-import com.techelevator.tenmo.security.TransferNotFoundException;
+import com.techelevator.tenmo.exceptions.InsufficientFundsException;
+import com.techelevator.tenmo.exceptions.InvalidTransactionAmountException;
+import com.techelevator.tenmo.exceptions.InvalidTransferException;
+import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
@@ -37,19 +39,20 @@ public class TransferController {
         return transferDao.getUsersAndUserIds();
     }
 
-    @GetMapping(path = "/view/transfers")
+    @GetMapping(path = "/view/all")
     public List<Transfer> transferList(Principal principal) {
         return transferDao.viewTransfers(userDao.findIdByUsername(principal.getName()));
     }
 
-    @GetMapping(path = "/view/transfers/{id}")
+    @GetMapping(path = "/view/{id}")
     public Transfer transfer(@PathVariable int id, Principal principal) throws TransferNotFoundException {
         return transferDao.viewTransferDetails(userDao.findIdByUsername(principal.getName()), id);
     }
 
     @GetMapping(path = "/send/{id}")
-    public Transfer sendMoney(@PathVariable int id, Principal principal) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmount {
-        return transferDao.sendTypeTransfer(userDao.findIdByUsername(principal.getName()), id, BigDecimal.valueOf(100));
+    public Transfer sendMoney(@PathVariable int id, @Valid @RequestBody Amount amount, Principal principal) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
+//        return transferDao.sendTypeTransfer(userDao.findIdByUsername(principal.getName()), id, amount);
+        return transferDao.sendTypeTransfer(amount.getAmount(), userDao.findIdByUsername(principal.getName()), id);
     }
 
 }

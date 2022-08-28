@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.security.InsufficientFundsException;
-import com.techelevator.tenmo.security.InvalidTransactionAmount;
-import com.techelevator.tenmo.security.InvalidTransferException;
-import com.techelevator.tenmo.security.TransferNotFoundException;
+import com.techelevator.tenmo.exceptions.InsufficientFundsException;
+import com.techelevator.tenmo.exceptions.InvalidTransactionAmountException;
+import com.techelevator.tenmo.exceptions.InvalidTransferException;
+import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 
 public interface TransferDao {
 
     Map<Integer, String> getUsersAndUserIds();
 
-    Transfer sendTypeTransfer(int fromUserId, int toUserId, BigDecimal amount) throws InsufficientFundsException,
-            InvalidTransferException, InvalidTransactionAmount;
+    Transfer sendTypeTransfer(BigDecimal amount, int fromUserId, int toUserId) throws InsufficientFundsException,
+            InvalidTransferException, InvalidTransactionAmountException;
 
     List<Transfer> viewTransfers(int userId);
 

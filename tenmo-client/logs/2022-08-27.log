@@ -1,0 +1,4 @@
+2022-08-27T19:49:38.580929 401 : [no body]
+2022-08-27T20:32:24.629749 404 : [{"timestamp":"2022-08-28T00:32:24.609+00:00","status":404,"error":"Not Found","message":"No message available","path":"/transfer/view/3057"}]
+2022-08-27T20:35:53.805649 I/O error on POST request for "http://localhost:8080/login": Connection refused (Connection refused); nested exception is java.net.ConnectException: Connection refused (Connection refused)
+2022-08-27T20:35:59.690534 I/O error on POST request for "http://localhost:8080/login": Connection refused (Connection refused); nested exception is java.net.ConnectException: Connection refused (Connection refused)

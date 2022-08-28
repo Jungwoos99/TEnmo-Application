@@ -1,10 +1,10 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.security.InsufficientFundsException;
-import com.techelevator.tenmo.security.InvalidTransactionAmount;
-import com.techelevator.tenmo.security.InvalidTransferException;
-import com.techelevator.tenmo.security.TransferNotFoundException;
+import com.techelevator.tenmo.exceptions.InsufficientFundsException;
+import com.techelevator.tenmo.exceptions.InvalidTransactionAmountException;
+import com.techelevator.tenmo.exceptions.InvalidTransferException;
+import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public Transfer sendTypeTransfer(int fromUserId, int toUserId, BigDecimal amount) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmount {
+    public Transfer sendTypeTransfer(BigDecimal amount, int fromUserId, int toUserId) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
         Transfer transfer = new Transfer();
         boolean sufficientFunds = checkForSufficientFunds(fromUserId, amount);
         boolean validTransaction = fromUserId != toUserId;
@@ -59,7 +59,7 @@ public class JdbcTransferDao implements TransferDao {
         } else if(!validTransaction){
             throw new InvalidTransferException("Transactions may only occur between different accounts.");
         } else {
-            throw new InvalidTransactionAmount("Transaction amounts must be greater than $0");
+            throw new InvalidTransactionAmountException("Transaction amounts must be greater than $0");
         }
     }
 
