@@ -7,8 +7,8 @@ import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TransferService;
-import io.cucumber.java.sl.In;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class App {
@@ -100,23 +100,23 @@ public class App {
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
-        Transfer[] transfers = transferService.getTransfers(currentUser);
-        for(Transfer transfer : transfers) {
-            System.out.println(transfer.toString());
+        consoleService.viewPastTransfers(transferService.getTransfers(currentUser), Math.toIntExact(currentUser.getUser().getId() + 998), transferService.getListOfUsers(currentUser), accountService.getAccountHolders(currentUser));
+        int transferId = consoleService.promptForIdInt("\nPlease select a transfer Id or enter 0 to return: ");
+        if(transferId == 0) {
+            mainMenu();
+        } else {
+            consoleService.viewTransfer(transferService.getTransfers(currentUser), transferId, transferService.getListOfUsers(currentUser), accountService.getAccountHolders(currentUser));
         }
 	}
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-//        Map<Integer, String> users = transferService.getListOfUsers(currentUser);
-//        for(Map.Entry<Integer, String> user : users.entrySet()) {
-//            System.out.println(user.toString());
-//        }
+        consoleService.showUsersAndUserIds(transferService.getListOfUsers(currentUser));
 	}
 
 	private void requestBucks() {

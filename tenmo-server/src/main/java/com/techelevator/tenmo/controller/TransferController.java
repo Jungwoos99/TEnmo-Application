@@ -3,7 +3,7 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.Amount;
+import com.techelevator.tenmo.model.TransferDTO;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 import com.techelevator.tenmo.exceptions.InvalidTransactionAmountException;
@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,6 @@ public class TransferController {
         this.accountDao = accountDao;
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping(path = "/view/users")
     public Map<Integer,String> viewUsers() {
         return transferDao.getUsersAndUserIds();
@@ -50,8 +48,14 @@ public class TransferController {
     }
 
     @GetMapping(path = "/send/{id}")
-    public Transfer sendMoney(@PathVariable int id, @Valid @RequestBody Amount amount, Principal principal) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
-        return transferDao.sendTypeTransfer(amount.getAmount(), userDao.findIdByUsername(principal.getName()), id);
+    public Transfer sendMoney(@PathVariable int id, @Valid @RequestBody TransferDTO transferDTO, Principal principal) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
+        return transferDao.sendTypeTransfer(transferDTO.getAmount(), userDao.findIdByUsername(principal.getName()), id);
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping(path = "/test")
+    public String getString(@RequestBody String string) {
+        return string;
     }
 
 }

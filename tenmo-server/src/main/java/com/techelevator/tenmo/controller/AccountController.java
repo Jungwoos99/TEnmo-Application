@@ -34,6 +34,11 @@ public class AccountController {
         return accountDAO.getAccountBalance(userId);
     }
 
+    @GetMapping(path = "/account_holders")
+    public Map<Integer, Integer> accounts() {
+        return accountDAO.getAccountAndUserIds();
+    }
+
     /***Test method to return account id using user id***/
     @GetMapping(path = "/{id}")
     public int getAccountId(@PathVariable int id) {

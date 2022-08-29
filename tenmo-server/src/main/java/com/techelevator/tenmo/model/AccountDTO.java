@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.model;
 
 public class AccountDTO {
+
     private Double number;
 
     public Double getNumber() {

@@ -70,8 +70,9 @@ public class JdbcTransferDao implements TransferDao {
     public List<Transfer> viewTransfers(int userId) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer " +
-                "WHERE account_from = ?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountDao.getAccountIdWithUserId(userId));
+                "WHERE account_from = ? " +
+                "OR account_to = ?;";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountDao.getAccountIdWithUserId(userId), accountDao.getAccountIdWithUserId(userId));
         while(result.next()) {
             Transfer transfer = mapRowToTransfer(result);
             transfers.add(transfer);
@@ -112,6 +113,22 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setAmount(amount);
         transfer.setTransfer_id(insertNewTransfer(transfer));
         return transfer;
+    }
+
+    private String getAccountHolderUsername(int accountId) {
+        String sql = "SELECT tm.username FROM tenmo_user tm "+
+                "JOIN account a USING (user_id) " +
+                "WHERE account_id = ?;";
+        String username = jdbcTemplate.queryForObject(sql, String.class, accountId);
+        return username;
+    }
+
+    private int getAccountId(String username) {
+        String sql = "SELECT a.account_id FROM account a "+
+                "JOIN tenmo_user tu USING (user_id) " +
+                "WHERE tu.username = ?;";
+        int accountId = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        return accountId;
     }
 
     private int insertNewTransfer(Transfer transfer) {

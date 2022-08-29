@@ -75,7 +75,7 @@ public class Transfer {
                 ", transferStatus=" + transferStatus +
                 ", accountFrom=" + accountFrom +
                 ", accountTo=" + accountTo +
-                ", balance=" + amount +
+                ", amount=" + amount +
                 '}';
     }
 }

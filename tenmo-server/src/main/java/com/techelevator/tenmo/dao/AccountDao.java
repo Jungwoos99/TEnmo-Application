@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 public interface AccountDao {
 
@@ -8,5 +9,6 @@ public interface AccountDao {
 
     int getAccountIdWithUserId(int userId);
 
+    Map<Integer, Integer> getAccountAndUserIds();
 }
 

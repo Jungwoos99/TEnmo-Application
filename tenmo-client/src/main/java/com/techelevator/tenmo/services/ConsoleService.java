@@ -1,9 +1,14 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
+import io.cucumber.java.sl.In;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -57,6 +62,55 @@ public class ConsoleService {
         return scanner.nextLine();
     }
 
+    public void viewPastTransfers(Transfer[] transfers, int userId, Map<Integer, String> users, Map<Integer, Integer> accountHolders) {
+        boolean hasTransfers = false;
+        System.out.println("-------------------------------------------\n" + "Transfers");
+        System.out.printf("|%-13s| %-14s|  %10s|  %n", "ID", "From/To", "Amount");
+        System.out.println("-------------------------------------------\n");
+        for (Transfer transfer : transfers) {
+            if (transfer.getAccountTo() == userId) {
+                hasTransfers = true;
+                System.out.printf("|%-13s| %-14s| %11s|%n", String.valueOf(transfer.getTransferId()), "From: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountFrom())))), "$"+String.valueOf(transfer.getAmount()));
+            } else if (transfer.getAccountFrom() == userId) {
+                hasTransfers = true;
+                System.out.printf("|%-13s| %-14s| %11s|%n", String.valueOf(transfer.getTransferId()), "To: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountTo())))), "$"+String.valueOf(transfer.getAmount()));
+            }
+        }
+        if(!hasTransfers) {
+            System.out.println("No transfers are associated with this account.");
+        }
+    }
+
+    public void viewTransfer(Transfer[] transfers, int transferId, Map<Integer, String> users, Map<Integer, Integer> accountHolders) {
+        Map<Integer, String> userList = users;
+        boolean hasTransfer = false;
+        for(Transfer transfer : transfers) {
+            if(transfer.getTransferId() == transferId) {
+                hasTransfer = true;
+                System.out.println("\n----------------------------");
+                System.out.println("Transfer Id: "+transfer.getTransferId());
+                System.out.println("From: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountFrom())))));
+                System.out.println("To: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountTo())))));
+                System.out.println("Transfer Type: " + getTransferType(transfer.getTransferType()));
+                System.out.println("Transfer Status: " + getTransferStatus(transfer.getTransferStatus()));
+                System.out.println("Transfer Amount: $" + transfer.getAmount());
+                System.out.println("----------------------------");
+            }
+        }
+        if (!hasTransfer) {
+            System.out.println("\nTransfer #" + transferId + " is not associated with this account.");
+        }
+    }
+
+    public void showUsersAndUserIds(Map<Integer, String> users) {
+        System.out.println("****************************************************************************************");
+        System.out.printf("%43s %n", "Users");
+        System.out.println("****************************************************************************************");
+        for(Map.Entry<Integer, String> entry : users.entrySet()) {
+            System.out.printf("|%-43s|%-43s|\n", "User ID: "+String.valueOf(entry.getKey()), "Username: " + entry.getValue());
+        }
+    }
+
     public int promptForIdInt(String prompt) {
         System.out.print(prompt);
         while (true) {
@@ -90,6 +144,28 @@ public class ConsoleService {
 
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
+    }
+
+    public String getTransferType(int transferType) {
+        String type = new String();
+        if(transferType == 2) {
+            type = "Send";
+        } else if (transferType == 1) {
+            type = "Request";
+        }
+        return type;
+    }
+
+    public String getTransferStatus(int transferStatus) {
+        String status = new String();
+        if(transferStatus == 2) {
+            status = "Approved";
+        } else if(transferStatus == 1) {
+            status = "Pending";
+        } else if(transferStatus == 3) {
+            status = "Rejected";
+        }
+        return status;
     }
 
 }
