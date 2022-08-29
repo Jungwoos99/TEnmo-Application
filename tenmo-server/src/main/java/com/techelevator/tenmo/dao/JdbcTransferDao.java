@@ -46,7 +46,10 @@ public class JdbcTransferDao implements TransferDao {
         boolean sufficientFunds = checkForSufficientFunds(fromUserId, amount);
         boolean validTransaction = fromUserId != toUserId;
         boolean validAmount = amount.compareTo(new BigDecimal(0)) == 1;
+
+
         if(sufficientFunds && validTransaction && validAmount && validFormat) {
+
             String sendSql = "UPDATE account SET balance = balance - ? " +
                     "WHERE user_id = ?;";
             jdbcTemplate.update(sendSql, amount, fromUserId);
@@ -54,7 +57,7 @@ public class JdbcTransferDao implements TransferDao {
                     "WHERE user_id = ?;";
             jdbcTemplate.update(depositSql, amount, toUserId);
             transfer = makeSendTransfer(fromUserId, toUserId, amount);
-            return transfer;
+
         } else if(!sufficientFunds){
             throw new InsufficientFundsException("Insufficient Funds");
         } else if(!validTransaction){
@@ -64,6 +67,7 @@ public class JdbcTransferDao implements TransferDao {
         } else {
             throw new InvalidTransactionAmountException("Transaction amount should follow standard USD format");
         }
+        return transfer;
     }
 
     @Override
@@ -158,7 +162,6 @@ public class JdbcTransferDao implements TransferDao {
         return Math.max(0, amount.stripTrailingZeros().scale());
     }
 
-    //Helper method which compares the balance of an account to a desired withdrawal amount
     private Boolean checkForSufficientFunds(int userId, BigDecimal amount) {
         String sql = "SELECT balance FROM account WHERE user_id = ?;";
         BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);

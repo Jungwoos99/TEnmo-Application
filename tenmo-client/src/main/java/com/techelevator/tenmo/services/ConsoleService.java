@@ -1,13 +1,12 @@
 package com.techelevator.tenmo.services;
 
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
+import io.cucumber.java.bs.I;
 import io.cucumber.java.sl.In;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -67,15 +66,23 @@ public class ConsoleService {
         System.out.println("-------------------------------------------\n" + "Transfers");
         System.out.printf("|%-13s| %-14s|  %10s|  %n", "ID", "From/To", "Amount");
         System.out.println("-------------------------------------------\n");
-        for (Transfer transfer : transfers) {
-            if (transfer.getAccountTo() == userId) {
-                hasTransfers = true;
-                System.out.printf("|%-13s| %-14s| %11s|%n", String.valueOf(transfer.getTransferId()), "From: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountFrom())))), "$"+String.valueOf(transfer.getAmount()));
-            } else if (transfer.getAccountFrom() == userId) {
-                hasTransfers = true;
-                System.out.printf("|%-13s| %-14s| %11s|%n", String.valueOf(transfer.getTransferId()), "To: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountTo())))), "$"+String.valueOf(transfer.getAmount()));
+
+        String account = new String();
+        for(Map.Entry<Integer, Integer> entry : accountHolders.entrySet()) {
+            if(entry.getValue().equals(userId)) {
+                account = String.valueOf(entry.getKey());
+                break;
             }
         }
+            for (Transfer transfer : transfers) {
+                if (transfer.getAccountTo() == Integer.valueOf(account)) {
+                    hasTransfers = true;
+                    System.out.printf("|%-13s| %-14s| %11s|%n", String.valueOf(transfer.getTransferId()), "From: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountFrom())))), "$"+String.valueOf(transfer.getAmount()));
+                } else if (transfer.getAccountFrom() == Integer.valueOf(account)) {
+                    hasTransfers = true;
+                    System.out.printf("|%-13s| %-14s| %11s|%n", String.valueOf(transfer.getTransferId()), "To: " + users.get(String.valueOf(accountHolders.get(String.valueOf(transfer.getAccountTo())))), "$"+String.valueOf(transfer.getAmount()));
+                }
+            }
         if(!hasTransfers) {
             System.out.println("No transfers are associated with this account.");
         }
@@ -146,7 +153,7 @@ public class ConsoleService {
         System.out.println("An error occurred. Check the log for details.");
     }
 
-    public String getTransferType(int transferType) {
+    private String getTransferType(int transferType) {
         String type = new String();
         if(transferType == 2) {
             type = "Send";
@@ -156,7 +163,7 @@ public class ConsoleService {
         return type;
     }
 
-    public String getTransferStatus(int transferStatus) {
+    private String getTransferStatus(int transferStatus) {
         String status = new String();
         if(transferStatus == 2) {
             status = "Approved";

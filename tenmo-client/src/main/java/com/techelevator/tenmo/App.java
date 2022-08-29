@@ -1,15 +1,13 @@
 package com.techelevator.tenmo;
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.TransferService;
 
 import java.math.BigDecimal;
-import java.util.Map;
+
 
 public class App {
 
@@ -100,7 +98,7 @@ public class App {
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
-        consoleService.viewPastTransfers(transferService.getTransfers(currentUser), Math.toIntExact(currentUser.getUser().getId() + 998), transferService.getListOfUsers(currentUser), accountService.getAccountHolders(currentUser));
+        consoleService.viewPastTransfers(transferService.getTransfers(currentUser), Math.toIntExact(currentUser.getUser().getId()), transferService.getListOfUsers(currentUser), accountService.getAccountHolders(currentUser));
         int transferId = consoleService.promptForIdInt("\nPlease select a transfer Id or enter 0 to return: ");
         if(transferId == 0) {
             mainMenu();
@@ -117,7 +115,11 @@ public class App {
 	private void sendBucks() {
 		// TODO Auto-generated method stub
         consoleService.showUsersAndUserIds(transferService.getListOfUsers(currentUser));
-	}
+        int accountTo = consoleService.promptForIdInt("Please select a user ID: ");
+        BigDecimal amount = consoleService.promptForBigDecimal("Please enter a dollar amount: $");
+        Transfer transfer = (transferService.send(transferService.makeTransferDTO(accountTo, amount), currentUser));
+        consoleService.viewTransfer(transferService.getTransfers(currentUser), transfer.getTransferId(), transferService.getListOfUsers(currentUser), accountService.getAccountHolders(currentUser));
+    }
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub

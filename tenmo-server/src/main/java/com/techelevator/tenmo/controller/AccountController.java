@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.AccountDTO;
-import com.techelevator.tenmo.model.Transfer;
 
 @RequestMapping("/account")
 @RestController
