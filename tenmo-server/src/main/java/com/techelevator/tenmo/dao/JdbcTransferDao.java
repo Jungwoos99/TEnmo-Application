@@ -42,6 +42,7 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer sendTypeTransfer(BigDecimal amount, int fromUserId, int toUserId) throws InsufficientFundsException, InvalidTransferException, InvalidTransactionAmountException {
         Transfer transfer = new Transfer();
+        boolean numerals = amount.getClass().equals(BigDecimal.class);
         boolean validFormat = getNumberOfDecimalPlaces(amount) <= 2;
         boolean sufficientFunds = checkForSufficientFunds(fromUserId, amount);
         boolean validTransaction = fromUserId != toUserId;
@@ -61,10 +62,12 @@ public class JdbcTransferDao implements TransferDao {
         } else if(!sufficientFunds){
             throw new InsufficientFundsException("Insufficient Funds");
         } else if(!validTransaction){
-            throw new InvalidTransferException("Transactions may only occur between different accounts.");
+            throw new InvalidTransferException("Transactions may only occur between different accounts");
+        } else if(!numerals) {
+            throw new InvalidTransactionAmountException("Transaction amount should only contain numbers and/or decimal point");
         } else if(!validAmount){
             throw new InvalidTransactionAmountException("Transaction amounts must be greater than $0");
-        } else {
+        }  else if(!validFormat){
             throw new InvalidTransactionAmountException("Transaction amount should follow standard USD format");
         }
         return transfer;

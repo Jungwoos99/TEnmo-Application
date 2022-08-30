@@ -109,7 +109,7 @@ public class App {
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
-
+        System.out.println("Feature coming soon on a phone near you.");
 	}
 
 	private void sendBucks() {
@@ -123,7 +123,7 @@ public class App {
 
 	private void requestBucks() {
 		// TODO Auto-generated method stub
-		
+        System.out.println("Feature coming soon on a phone near you.");
 	}
 
 }

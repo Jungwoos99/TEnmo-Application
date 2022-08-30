@@ -63,9 +63,9 @@ public class ConsoleService {
 
     public void viewPastTransfers(Transfer[] transfers, int userId, Map<Integer, String> users, Map<Integer, Integer> accountHolders) {
         boolean hasTransfers = false;
-        System.out.println("-------------------------------------------\n" + "Transfers");
+        System.out.println("--------------------------------------------\n" + "Transfers");
         System.out.printf("|%-13s| %-14s|  %10s|  %n", "ID", "From/To", "Amount");
-        System.out.println("-------------------------------------------\n");
+        System.out.println("--------------------------------------------\n");
 
         String account = new String();
         for(Map.Entry<Integer, Integer> entry : accountHolders.entrySet()) {

@@ -1,0 +1,3 @@
+2022-08-30T02:56:58.567465 500 : [{"timestamp":"2022-08-30T06:56:58.540+00:00","status":500,"error":"Internal Server Error","message":"Transaction amounts must be greater than $0","path":"/transfer/send/1030"}]
+2022-08-30T02:57:07.449755 500 : [{"timestamp":"2022-08-30T06:57:07.448+00:00","status":500,"error":"Internal Server Error","message":"Insufficient Funds","path":"/transfer/send/1030"}]
+2022-08-30T02:57:17.032196 500 : [{"timestamp":"2022-08-30T06:57:17.030+00:00","status":500,"error":"Internal Server Error","message":"Transactions may only occur between different accounts","path":"/transfer/send/1029"}]
